@@ -44,6 +44,9 @@ var carObject = {
       "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Fuga eligendi veritatis expedita, dicta aut eum itaque ut tempora alias laudantium?",
   };
 
+
+  let servicesArray = [boatObject,bikeObject, carObject,busObject]
+
   function displaySevice(service){
   const mainSection = document.getElementById('main-section');
   const stringifiedObj = JSON.stringify(service);
@@ -75,12 +78,71 @@ var carObject = {
 
 }
 
-  displaySevice(carObject);
-  displaySevice(busObject);
-  displaySevice(bikeObject);
+function displayAllArticles(arr) {
+    for (let i = 0; i < arr.length; i++) {
+        const element = arr[i];
+        displaySevice(element);
+    }
+
+ }
+
+
+ displayAllArticles(servicesArray)
 
 
 
   function handleBooking(obj){
-
+   const modalBody = document.getElementById('modal-body')
+   const stringifiedObj = JSON.stringify(obj);
+   modalBody.innerHTML = `
+   <div class="card mx-auto" style="width: 18rem;">
+   <img src=${obj.imageUrl} class="card-img-top" alt="...">
+   <div class="card-body">
+     <h5 class="card-title">Vehicle Mood : ${obj.vehicle}</h5>
+     <p class="card-text">${obj.description}</p>
+     <p class="card-text"><small class="text-muted">Fare per kilo ${obj.farePerKilo}</small> <small class="text-muted">Capacity ${obj.capacity}</small></p>
+     <div class="d-flex flex-column" role="search">
+      <p>Fare: <small class="text-muted" id="fare"></small > </p>
+      <p>tax: <small class="text-muted" id="tax"></small > </p>
+      <p>Total-cost: <small class="text-muted" id="total-cost"></small > </p>
+     <input class="form-control m-2" id=  "distance-input"  type="number" placeholder="Koto kilo jaba?" aria-label="Search"/>
+     <input class="form-control m-2" type="number" id=  "quantity-input" placeholder="koita gari lagbe?" aria-label="Search"/>
+     <button class="btn btn-outline-success" id="search-btn" aria-label="type="submit" onclick='calculateCost(${stringifiedObj})'>submit</button>
+   </div>
+   </div>
+ </div>
+   
+   
+   `
   }
+
+  function calculateCost(obj) {
+    console.log(obj);
+  const quantity = document.getElementById("quantity-input").value;
+  const distance = document.getElementById("distance-input").value;
+
+  const fareDiv = document.getElementById("fare");
+
+  fareDiv.innerHTML = quantity * distance * obj.farePerKilo;
+  console.log(fareDiv);
+}
+
+document.getElementById("search-btn").addEventListener("click", function(){
+    const  value = document.getElementById("search-value").value;
+    
+    for (let i = 0; i < servicesArray.length; i++) {
+        const element = servicesArray[i];
+        if(value.toLowerCase()
+            == element.vehicle.toLowerCase()){
+                document.getElementById("main-section").innerText=""
+                displaySevice(element)
+                return;
+        }
+        
+    }
+    
+    alert("nothing found with your input")
+    
+    
+    })
+    
